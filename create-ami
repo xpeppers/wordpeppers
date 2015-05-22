@@ -2,8 +2,8 @@
 
 set -e
 
-# rm -rf berks-cookbooks
-# berks vendor
-# berks update
+rm -rf berks-cookbooks
+berks vendor
+berks update
 
-env $(cat .env | xargs) packer build -var-file=variables.json ami.json
+env $(cat .env | xargs) packer build -var-file=packer-variables.json packer.json
