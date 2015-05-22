@@ -1,0 +1,7 @@
+.env
+Berksfile.lock
+berks-cookbooks
+variables.json
+*.tfvars
+*.tfstate
+*.backup

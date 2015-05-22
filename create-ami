@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+# rm -rf berks-cookbooks
+# berks vendor
+# berks update
+
+env $(cat .env | xargs) packer build -var-file=variables.json ami.json

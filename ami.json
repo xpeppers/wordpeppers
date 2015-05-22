@@ -1,0 +1,41 @@
+{
+  "variables": {
+    "ami_name": "wordpeppers",
+    "server_name": "localhost",
+    "docroot": "/var/www",
+    "db_user": "wordpress",
+    "db_password": ""
+  },
+
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "eu-west-1",
+      "subnet_id": "subnet-0230dc75",
+      "security_group_id": "sg-e7d01c82",
+      "source_ami": "ami-f0b11187",
+      "ami_virtualization_type": "hvm",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "{{user `ami_name`}}"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "chef-solo",
+      "cookbook_paths": ["berks-cookbooks"],
+      "run_list": [ "wordpeppers"],
+      "json": {
+        "wordpeppers": {
+          "server_name": "{{user `server_name`}}",
+          "docroot": "{{user `docroot`}}",
+          "db": {
+            "user": "{{user `db_user`}}",
+            "password": "{{user `db_password`}}"
+          }
+        }
+      }
+    }
+  ]
+}

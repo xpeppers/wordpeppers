@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+env $(cat .env | xargs) terraform apply
