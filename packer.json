@@ -5,6 +5,8 @@
     "docroot": "/var/www",
     "db_user": "wordpress",
     "db_password": "",
+    "private_key": "",
+    "authorized_keys": "",
     "region": "eu-west-1",
     "subnet_id": "subnet-0230dc75",
     "security_group_id": "sg-e7d01c82",
@@ -29,14 +31,20 @@
     {
       "type": "chef-solo",
       "cookbook_paths": ["berks-cookbooks"],
-      "run_list": [ "wordpeppers"],
+      "run_list": [ "wordpeppers", "wordpeppers::deploy"],
       "json": {
         "wordpeppers": {
-          "server_name": "{{user `server_name`}}",
-          "docroot": "{{user `docroot`}}",
+          "web": {
+            "server_name": "{{user `server_name`}}",
+            "docroot": "{{user `docroot`}}"
+          },
           "db": {
             "user": "{{user `db_user`}}",
             "password": "{{user `db_password`}}"
+          },
+          "deploy": {
+            "private_key": "{{user `private_key`}}",
+            "authorized_keys": "{{user `authorized_keys`}}"
           }
         }
       }

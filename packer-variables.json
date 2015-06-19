@@ -1,7 +1,0 @@
-{
-  "ami_name": "trentino-local",
-  "server_name": "www.trentino-local.dev",
-  "docroot": "/vagrant/trentino-local",
-  "db_user": "wp-user",
-  "db_password": "1d9a8b5af7bb90a57b7449b513cbfa6b18e5f7b6"
-}

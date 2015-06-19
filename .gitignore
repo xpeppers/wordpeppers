@@ -1,7 +1,7 @@
 .env
 Berksfile.lock
 berks-cookbooks
-variables.json
+packer-variables.json
 *.tfvars
 *.tfstate
 *.backup
