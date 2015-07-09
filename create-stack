@@ -2,4 +2,4 @@
 
 set -e
 
-env $(cat .env | xargs) terraform apply
+env $(cat .env | xargs) terraform apply -var-file $1

@@ -25,6 +25,15 @@ resource "aws_subnet" "public" {
   }
 }
 
+resource "aws_subnet" "private" {
+  vpc_id = "${aws_vpc.default.id}"
+  cidr_block = "${var.private_subnet_cidr}"
+  availability_zone = "${var.aws_region}b"
+  tags {
+    Name = "${var.name} private"
+  }
+}
+
 resource "aws_route_table" "public" {
   vpc_id = "${aws_vpc.default.id}"
   route {
@@ -66,17 +75,57 @@ resource "aws_security_group" "web" {
 
   egress {
     from_port = 0
-    to_port = 65535
+    to_port = 0
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_security_group" "db" {
+  name = "${var.name} db"
+  description = "${var.name} db security group"
+  vpc_id = "${aws_vpc.default.id}"
+
+  ingress {
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
+    security_groups = ["${aws_security_group.web.id}"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_db_subnet_group" "default" {
+  name = "${var.name}"
+  description = "${var.name} db subnets"
+  subnet_ids = ["${aws_subnet.public.id}", "${aws_subnet.private.id}"]
+}
+
+resource "aws_db_instance" "default" {
+  identifier = "${var.name}"
+  allocated_storage = 10
+  engine = "mysql"
+  engine_version = "5.6.23"
+  instance_class = "db.t2.micro"
+  multi_az = "false"
+  name = "wordpress"
+  username = "${var.db_username}"
+  password = "${var.db_password}"
+  db_subnet_group_name = "${aws_db_subnet_group.default.name}"
+  vpc_security_group_ids = ["${aws_security_group.db.id}"]
 }
 
 resource "aws_instance" "web" {
   instance_type = "${var.instance_type}"
   ami = "${var.ami}"
   subnet_id =  "${aws_subnet.public.id}"
-  key_name = "${var.name}"
+  key_name = "${var.key_name}"
   security_groups = ["${aws_security_group.web.id}"]
 
   connection {

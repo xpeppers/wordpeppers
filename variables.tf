@@ -1,6 +1,9 @@
 variable "name" {
 }
 
+variable "key_name" {
+}
+
 variable "key_path" {
 }
 
@@ -23,3 +26,12 @@ variable "public_subnet_cidr" {
   default = "10.2.0.0/24"
 }
 
+variable "private_subnet_cidr" {
+  default = "10.2.0.0/24"
+}
+
+variable "db_username" {
+}
+
+variable "db_password" {
+}
