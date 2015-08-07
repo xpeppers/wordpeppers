@@ -119,6 +119,8 @@ resource "aws_db_instance" "default" {
   password = "${var.db_password}"
   db_subnet_group_name = "${aws_db_subnet_group.default.name}"
   vpc_security_group_ids = ["${aws_security_group.db.id}"]
+  final_snapshot_identifier = "${var.name}-final-snapshot"
+  backup_retention_period = 3
 }
 
 resource "aws_instance" "web" {

@@ -2,8 +2,10 @@
 
 set -e
 
+VAR_FILE=$1
+
 rm -rf berks-cookbooks
 berks vendor
 berks update
 
-env $(cat .env | xargs) packer build -var-file=packer-variables.json packer.json
+env $(cat .env | xargs) packer build -var-file=$VAR_FILE packer.json
