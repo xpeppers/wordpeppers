@@ -7,3 +7,5 @@ VAR_FILE=$1
 rm -rf *.tfstate*
 
 env $(cat .env | xargs) terraform apply -var-file $VAR_FILE
+
+rm -rf *.tfstate*

@@ -18,8 +18,12 @@ variable "instance_type" {
   default = "t2.micro"
 }
 
-variable "vpc_cidr" {
-  default = "10.2.0.0/16"
+variable "vpc_id" {
+  default = "vpc-ffd1459a"
+}
+
+variable "route_table_id" {
+  default = "rtb-90402cf5"
 }
 
 variable "public_subnet_cidr" {

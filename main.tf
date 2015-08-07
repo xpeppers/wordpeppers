@@ -2,31 +2,18 @@ provider "aws" {
     region = "${var.aws_region}"
 }
 
-resource "aws_vpc" "default" {
-  cidr_block = "${var.vpc_cidr}"
-  enable_dns_hostnames = true
-  tags {
-    Name = "${var.name}"
-  }
-}
-
-resource "aws_internet_gateway" "default" {
-  vpc_id = "${aws_vpc.default.id}"
-}
-
 resource "aws_subnet" "public" {
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${var.vpc_id}"
   cidr_block = "${var.public_subnet_cidr}"
   availability_zone = "${var.aws_region}a"
   map_public_ip_on_launch = true
-  depends_on = ["aws_internet_gateway.default"]
   tags {
     Name = "${var.name} public"
   }
 }
 
 resource "aws_subnet" "private" {
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${var.vpc_id}"
   cidr_block = "${var.private_subnet_cidr}"
   availability_zone = "${var.aws_region}b"
   tags {
@@ -34,23 +21,15 @@ resource "aws_subnet" "private" {
   }
 }
 
-resource "aws_route_table" "public" {
-  vpc_id = "${aws_vpc.default.id}"
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.default.id}"
-  }
-}
-
 resource "aws_route_table_association" "public" {
   subnet_id = "${aws_subnet.public.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  route_table_id = "${var.route_table_id}"
 }
 
 resource "aws_security_group" "web" {
   name = "${var.name} web"
   description = "Security group for web that allows web traffic from internet"
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${var.vpc_id}"
 
   ingress {
     from_port = 80
@@ -84,7 +63,7 @@ resource "aws_security_group" "web" {
 resource "aws_security_group" "db" {
   name = "${var.name} db"
   description = "${var.name} db security group"
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${var.vpc_id}"
 
   ingress {
     from_port = 3306
